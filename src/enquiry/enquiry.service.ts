@@ -55,6 +55,20 @@ export class EnquiryService {
     return this.enquiryModel.find().sort({ createdAt: sortDirection === 'asc' ? 1 : -1 }).exec();
   }
   
-  
+  async paginateEnquiries(limit: number = 10) {
+    const enquiries = await this.enquiryModel
+      .find()  
+      .limit(limit)  
+      .sort({ createdAt: -1 });  
+      
+    const total = await this.enquiryModel.countDocuments();
+
+    return {
+      enquiries,
+      total,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
 
 }

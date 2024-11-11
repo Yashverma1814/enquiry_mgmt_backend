@@ -20,17 +20,24 @@ export class EnquiryController {
   async createEnquiry(@Body() createEnquiryDto: any): Promise<Enquiry> {
     return this.enquiryService.createEnquiry(createEnquiryDto);
   }
-  
 
   @Get()
+  async getAllEnquiries(): Promise<Enquiry[]> {
+    return this.enquiryService.getAllEnquiries();
+  }
+
+  
+  @Get('sorting')
   async getAllEnquiriesAndSort(@Query('sort') sortDirection: 'asc' | 'desc') {
     return this.enquiryService.findAll(sortDirection);
   }
 
 
-  @Get()
-  async getAllEnquiries(): Promise<Enquiry[]> {
-    return this.enquiryService.getAllEnquiries();
+  @Get('paginate')
+  async findAll(
+    @Query('limit') limit: number = 10  // Default to 10 items per page
+  ) {
+    return this.enquiryService.paginateEnquiries(limit);
   }
 
   @Get('filter-by-grade')
@@ -60,4 +67,5 @@ export class EnquiryController {
   async deleteEnquiry(@Param('id') id: string): Promise<Enquiry> {
     return this.enquiryService.deleteEnquiry(id);
   }
+  
 }
