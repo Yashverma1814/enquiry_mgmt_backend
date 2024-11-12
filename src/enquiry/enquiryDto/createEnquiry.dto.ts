@@ -27,6 +27,12 @@ export class CreateEnquiryDto {
   @IsString()
   @IsOptional()
   currentSchool?: string;
+  
+  @IsOptional()
+  wantHostel?:Boolean
+
+  @IsOptional()
+  wantTransport?:Boolean
 
   @IsObject()
   @ValidateNested()

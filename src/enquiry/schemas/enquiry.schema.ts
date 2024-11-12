@@ -96,6 +96,12 @@ export class Enquiry extends Document {
   @Prop({ type: String, default: '' })
   description?: string;
 
+  @Prop({type:Boolean, default:false })
+  wantHostelInfo?:Boolean
+
+  @Prop({type:Boolean, default:false })
+  wantTransportInfo?:Boolean
+
   @Prop({default:Date.now()})
   createdAt : Date
 }
