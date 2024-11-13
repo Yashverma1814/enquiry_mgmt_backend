@@ -2,9 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-// import { AuthModule } from './auth/auth.module';
 import { EnquiryModule } from './enquiry/enquiry.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './auth/jwt.strategy';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
 
 
 @Module({
@@ -19,10 +22,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         uri:`mongodb+srv://${configService.get<string>('DB_USERNAME')}:${configService.get<string>('DB_PASSWORD')}@cluster0.g03cm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
       }),
     }),
-    // AuthModule,
+    AuthModule,
     EnquiryModule,
+    JwtModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, JwtStrategy],
 })
 export class AppModule {}
