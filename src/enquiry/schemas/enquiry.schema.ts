@@ -101,6 +101,19 @@ export class Enquiry extends Document {
   @Prop({type:Boolean, default:false })
   wantTransportInfo?:Boolean
 
+  @Prop({
+    type: [
+      {
+        message: { type: String, required: true },
+        date: { type: Date, default: Date.now },
+        addedBy: { type: String, required: true },
+      },
+    ],
+    default: [],
+  })
+  remark?: { message: string; date: Date; addedBy: string }[];
+  
+
   @Prop({default:Date.now()})
   createdAt : Date
 }

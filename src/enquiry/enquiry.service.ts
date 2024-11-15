@@ -1,5 +1,6 @@
+import { RemarkDto } from './enquiryDto/addRemark.dto';
 // src/enquiry/enquiry.service.ts
-import { ConflictException, Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Enquiry } from "./schemas/enquiry.schema";
@@ -39,6 +40,25 @@ export class EnquiryService {
     return this.enquiryModel.findByIdAndUpdate(id, updateEnquiryDto, { new: true }).exec();
   }
 
+async addRemark(id: string, RemarkDto) {
+  const enquiry = await this.enquiryModel.findById(id);
+  if (!enquiry) {
+    throw new NotFoundException('Enquiry not found');
+  }
+
+  const remark = {
+    message: RemarkDto.message,
+    date: new Date(),  
+    addedBy: RemarkDto.addedBy,
+  };
+
+  enquiry.remark.push(remark);
+  await enquiry.save();
+
+  return remark;
+}
+
+
   async deleteEnquiry(id: string): Promise<Enquiry> {
     return this.enquiryModel.findByIdAndDelete(id).exec();
   }
@@ -54,21 +74,42 @@ export class EnquiryService {
   async findAll(sortDirection: 'asc' | 'desc' = 'asc') {
     return this.enquiryModel.find().sort({ createdAt: sortDirection === 'asc' ? 1 : -1 }).exec();
   }
-  
-  async paginateEnquiries(limit: number = 10) {
+
+
+  async paginateEnquiries(limit: number = 10, page: number = 1, state: string = "",enquirySource:string = "",hostel:boolean=null) {
+    const offset = (page - 1) * limit;
+    
+    const query: any = {};
+    if (state) {
+        query['address.state'] = state;
+    }
+
+    if(enquirySource){
+      query["enquirySource"] = enquirySource; 
+    }
+
+    if(hostel===true){
+      console.log(hostel)
+      query["wantHostelInfo"] = hostel
+    }
+
     const enquiries = await this.enquiryModel
-      .find()  
-      .limit(limit)  
-      .sort({ createdAt: -1 });  
-      
-    const total = await this.enquiryModel.countDocuments();
+      .find(query) 
+      .skip(offset)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const total = await this.enquiryModel.countDocuments(query);
 
     return {
       enquiries,
       total,
       limit,
       totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      nextPage: page < Math.ceil(total / limit) ? page + 1 : null,
     };
-  }
+}
+
 
 }

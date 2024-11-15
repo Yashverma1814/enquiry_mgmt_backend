@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { EnquiryService } from './enquiry.service';
 import { Enquiry } from './schemas/enquiry.schema';
+import { RemarkDto } from './enquiryDto/addRemark.dto';
 
 @Controller('enquiries')
 export class EnquiryController {
@@ -35,10 +36,14 @@ export class EnquiryController {
 
   @Get('paginate')
   async findAll(
-    @Query('limit') limit: number = 10  // Default to 10 items per page
+    @Query('limit') limit: number = 10, 
+    @Query('page') page: number = 1,
+    @Query('state') state:string = "",
+    @Query('enquirySource') enquirySource:string = "", 
+    @Query('hostel') hostel :boolean = null,
   ) {
-    return this.enquiryService.paginateEnquiries(limit);
-  }
+    return this.enquiryService.paginateEnquiries(limit, page,state,enquirySource,hostel);
+  }  
 
   @Get('filter-by-grade')
   async getEnquiriesByGrade(@Query('grade') grade: string) {
@@ -66,6 +71,14 @@ export class EnquiryController {
   @Delete(':id')
   async deleteEnquiry(@Param('id') id: string): Promise<Enquiry> {
     return this.enquiryService.deleteEnquiry(id);
+  }
+
+  @Put('add-remark/:id')
+  async addRemark(
+    @Param('id') id:string,
+    @Body() RemarkDto:any
+  ):Promise<{ message: any; date: Date; addedBy: any; }>{
+    return this.enquiryService.addRemark(id,RemarkDto)
   }
   
 }
