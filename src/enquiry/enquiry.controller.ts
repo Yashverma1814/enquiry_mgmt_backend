@@ -1,4 +1,4 @@
-// src/enquiry/enquiry.controller.ts
+
 import {
   Controller,
   Get,
@@ -41,8 +41,9 @@ export class EnquiryController {
     @Query('state') state:string = "",
     @Query('enquirySource') enquirySource:string = "", 
     @Query('hostel') hostel :boolean = null,
+    @Query('searchedName') searchedName:string = ""
   ) {
-    return this.enquiryService.paginateEnquiries(limit, page,state,enquirySource,hostel);
+    return this.enquiryService.paginateEnquiries(limit, page,state,enquirySource,searchedName );
   }  
 
   @Get('filter-by-grade')

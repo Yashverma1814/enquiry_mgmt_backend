@@ -1,4 +1,4 @@
-// src/enquiry/enquiry.module.ts
+
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EnquiryService } from './enquiry.service';

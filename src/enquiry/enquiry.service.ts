@@ -1,5 +1,4 @@
 import { RemarkDto } from './enquiryDto/addRemark.dto';
-// src/enquiry/enquiry.service.ts
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
@@ -13,6 +12,7 @@ export class EnquiryService {
     const existingEnquery = await this.enquiryModel.findOne({"contactDetails.contactMain":contactMain}).exec()
     return !!existingEnquery
   }
+  
 
   async createEnquiry(createEnquiryDto: any): Promise<Enquiry> {
 
@@ -76,21 +76,23 @@ async addRemark(id: string, RemarkDto) {
   }
 
 
-  async paginateEnquiries(limit: number = 10, page: number = 1, state: string = "",enquirySource:string = "",hostel:boolean=null) {
+  async paginateEnquiries(limit: number = 10, page: number = 1, state: string = "",enquirySource:string = "",searchedName:string="") {
     const offset = (page - 1) * limit;
     
     const query: any = {};
-    if (state) {
-        query['address.state'] = state;
-    }
 
+    
+    if (state) {
+      query['address.state'] = state;
+    }
+    
     if(enquirySource){
       query["enquirySource"] = enquirySource; 
     }
-
-    if(hostel===true){
-      console.log(hostel)
-      query["wantHostelInfo"] = hostel
+    
+    
+    if(searchedName){
+      query["studentName"]=new RegExp(searchedName,"i")
     }
 
     const enquiries = await this.enquiryModel

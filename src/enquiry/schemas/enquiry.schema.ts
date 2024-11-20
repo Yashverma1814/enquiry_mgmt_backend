@@ -1,11 +1,9 @@
 import { Query } from '@nestjs/common';
-// src/enquiry/schemas/enquiry.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 export enum EnquirySource {
   WEBSITE = 'website',
-  SCHOOL_FAIR = 'school_fair    ',
   REFERRAL = 'referral',
   OTHER = 'other',
 }
@@ -30,7 +28,7 @@ export enum Grade{
     GRADE_12 = "twelfth class",
 }
 
-@Schema()
+@Schema( {timestamps:true})
 export class Enquiry extends Document {
   @Prop({ required: true })
   guardianName: string;
@@ -113,9 +111,6 @@ export class Enquiry extends Document {
   })
   remark?: { message: string; date: Date; addedBy: string }[];
   
-
-  @Prop({default:Date.now()})
-  createdAt : Date
 }
 
 export const EnquirySchema = SchemaFactory.createForClass(Enquiry);
