@@ -76,7 +76,7 @@ async addRemark(id: string, RemarkDto) {
   }
 
 
-  async paginateEnquiries(limit: number = 10, page: number = 1, state: string = "",enquirySource:string = "",searchedName:string="") {
+  async paginateEnquiries(limit: number = 10, page: number = 1, state: string = "",enquirySource:string = "",searchedName:string="",sort:string="") {
     const offset = (page - 1) * limit;
     
     const query: any = {};
@@ -99,7 +99,7 @@ async addRemark(id: string, RemarkDto) {
       .find(query) 
       .skip(offset)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt:  sort === 'asc' ? 1 : -1 });
 
     const total = await this.enquiryModel.countDocuments(query);
 

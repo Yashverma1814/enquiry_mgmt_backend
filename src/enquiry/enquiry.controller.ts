@@ -41,9 +41,10 @@ export class EnquiryController {
     @Query('state') state:string = "",
     @Query('enquirySource') enquirySource:string = "", 
     @Query('hostel') hostel :boolean = null,
-    @Query('searchedName') searchedName:string = ""
+    @Query('searchedName') searchedName:string = "",
+    @Query('sort') sort:string = ""
   ) {
-    return this.enquiryService.paginateEnquiries(limit, page,state,enquirySource,searchedName );
+    return this.enquiryService.paginateEnquiries(limit, page,state,enquirySource,searchedName,sort );
   }  
 
   @Get('filter-by-grade')
