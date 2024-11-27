@@ -42,9 +42,10 @@ export class EnquiryController {
     @Query('enquirySource') enquirySource:string = "", 
     @Query('hostel') hostel :boolean = null,
     @Query('searchedName') searchedName:string = "",
-    @Query('sort') sort:string = ""
+    @Query('sort') sort:string = "",
+    @Query('nameSort') nameSort:string=""
   ) {
-    return this.enquiryService.paginateEnquiries(limit, page,state,enquirySource,searchedName,sort );
+    return this.enquiryService.paginateEnquiries(limit, page,state,enquirySource,searchedName,sort,nameSort );
   }  
 
   @Get('filter-by-grade')
